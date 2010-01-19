@@ -1,0 +1,117 @@
+/* By Thomas.Lange@corelatus.se */
+
+div.goWeather select {
+    width       : 100%;
+    text-align  : left;
+    font-weight : bold;
+    border      : 0;
+    background  : transparent;
+    padding-top : 3px;
+    padding-left: 5px;
+}
+
+div.goWeather input {
+    font-size : 70%;
+    padding   : 0;
+    margin    : 0;
+}
+
+div.goWeather p {
+    padding    : 0;
+    margin     : 0;
+    text-align : center;
+}
+
+div.goWeather td {
+    text-align : center;
+}
+
+div.goWeather a {
+    font-weight : bold;
+    background  : transparent;
+}
+
+div.goWeather img {
+    margin     : 0;
+    padding    : 0;
+}
+
+div.goWeather table {
+    width      : 100%;
+}
+
+div.goWeather tr {
+    padding    : 0;
+    margin     : 0;
+}
+
+div.goWeather.goWeatherWrapper {
+    width      : 98%;  
+    max-width  : 200px;
+    color      : black;
+    margin-top : 10px;
+}
+
+div.goWeather.goWeatherImage {
+    background-image    : url("../imgs/clear_sky.jpg");
+    background-position : top left;
+    background-repeat   : no-repeat;
+}
+
+div.goWeather.goWeatherBorder { 
+    border : 1px solid grey;
+}
+div.goWeather p.goWeatherTitle { 
+    padding-top    : 4px;
+    padding-bottom : 2px;
+}
+
+div.goWeather p.goWeatherTitle,
+div.goWeather div.goWeatherHead { 
+    font-size           : 16px;
+    font-weight         : bold;
+    text-align          : center;
+    background-color    : transparent;
+    color : black;
+    width               : 100%;
+}
+
+div.goWeather p.goWeatherDate {
+    background-image    : url("../imgs/date_bg.png");
+    background-repeat   : repeat-x;
+    font-size        : 12px;
+    font-weight      : bold;
+    padding-top      : 4px;
+    height           : 16px;
+}
+
+div.goWeather td.goWeatherTime font.goWeatherTime12h {
+    font-size   : 12px;
+}
+
+div.goWeather td.goWeatherTime {
+    width       : 25%;
+    font-size   : 13px;
+    white-space : nowrap;
+}
+
+div.goWeather td.goWeatherSymbol {
+    width       : 25%
+}
+
+div.goWeather td.goWeatherTemp {
+    width       : 25%;
+    font-weight : bold;
+    font-size   : 14pt;	
+    white-space : nowrap;
+}
+
+div.goWeather td.goWeatherWind {
+    width       : 25%
+}
+
+div.goWeather .goWeatherFooter {
+    padding-bottom : 7px;
+    font-weight    : bold;
+    font-size      : 14px;
+}
