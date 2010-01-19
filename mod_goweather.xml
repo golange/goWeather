@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5.0" method="upgrade">
+	<name>GoWeather</name>
+	<author>Thomas Lange</author>
+	<creationDate>January 2010</creationDate>
+	<copyright>(C) 2010 Thomas Lange. All Rights Reserved</copyright>
+	<license>GNU GPLv2 http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>thomas@corelatus.se</authorEmail>
+	<authorUrl>http://www.golange.se/</authorUrl>
+	<version>0.0.1</version>
+	<description>Weather module displaying forecasts. Currently only supporting data from yr.no. Uses a short lived cache as well as a long lived cache to handle network problems. See http://goweather.golange.se for latest updates.</description>
+
+	<files>
+		<filename module="mod_goweather">index.html</filename>
+		<filename module="mod_goweather">mod_goweather.php</filename>
+		<filename module="mod_goweather">mod_goweather.xml</filename>
+		<filename module="mod_goweather">helper.php</filename>
+		<filename module="mod_goweather">tmpl/index.html</filename>
+		<filename module="mod_goweather">tmpl/default.php</filename>
+		<filename module="mod_goweather">css/index.html</filename>
+		<filename module="mod_goweather">css/mod_goweather.css</filename>
+		<filename module="mod_goweather">imgs/index.html</filename>
+		<filename module="mod_goweather">imgs/clear_sky.jpg</filename>
+		<filename module="mod_goweather">imgs/date_bg.png</filename>
+	</files>
+
+        <!-- Site Languages -->
+        <languages>
+                <language tag="en-GB">en-GB.mod_goweather.ini</language>
+                <language tag="sv-SE">sv-SE.mod_goweather.ini</language>
+        </languages>
+
+	<params>
+		<param name="debug" type="radio" default="0" label="Debug" description="Send debug logs to screen. Should be used on live systems along with 'User debug view' set to 'nothing' when changing parameters until admin has verified that everything works as expected. Callback caching will be turned off!">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="debug_user" type="radio" default="off" label="User Debug View" description="What non-administrators will see when debugging. If set to 'nothing', module will disappear. On a live system 'Nothing' is the recommended value!">
+			<option value="off">Nothing</option>
+			<option value="normal">Normal</option>
+			<option value="logs">Debug logs</option>
+		</param>
+		<param name="temp" type="radio" default="C" label="Show Temperature In" description="">
+			<option value="C">Celcius</option>
+			<option value="F">Fahrenheit</option>
+		</param>		
+		<param name="speed" type="radio" default="Mps" label="Show Windspeed In" description="">
+			<option value="Mps">Mps</option>
+			<option value="Mph">Mph</option>
+			<option value="Kph">Km/h</option>
+		</param>		
+		<param name="height" type="radio" default="Mm" label="Show Precipitation In" description="">
+			<option value="Mm">Mm</option>
+			<option value="Inch">Inch</option>
+		</param>		
+		<param name="24h" type="radio" default="24h" label="Time format" description="">
+			<option value="24h">24 Hour</option>
+			<option value="12h">12 Hour</option>
+		</param>		
+
+		<param name="cache_time" type="text" size="6" default="1200" label="Cache Time" description="Set the cache time for the weather feed (seconds)" />
+
+                <param name="timeout" type="text" size="6" default="5" label="Network Timeout" description="Timeout value for fetching XML data from yr.no (seconds). We will wait until we get XML data or timeout, so be careful here.">
+		</param>		
+
+                <param name="yrlink" type="text" size="20" default="" label="YR sublink" description="Page to use for link in footer, e.g. hour_by_hour.html, advanced_map.html">
+		</param>		
+
+		<param name="days" type="text" default="2" label="Max number of days" description="Max number of days to show forecast for." />
+
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+
+		<param name="borders" type="radio" default="1" label="Use Borders" description="">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+
+                <param name="background_color" type="text" size="20" default="inherit" label="Background Color" description="Override template background color with your own value or use 'inherit' to inherit from template. Examples: white, grey, #F0F0F0. Has no effect if background image is used.">
+		</param>		
+
+		<param name="background_image" type="radio" default="1" label="Use Background Image" description="">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>		
+
+		<param name="temp_color" type="radio" default="dynamic" label="Temperature Color" description="'Dynamic' changes color from very cold (blue) to very hot (red) in a smooth fashion. Freezing point will be color #800080. 'Red and blue' simply sets blue for below freezing, otherwise red.">
+			<option value="dynamic">Dynamic</option>
+			<option value="redblue">Red and blue</option>
+		</param>
+
+		<param name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="A suffix to be applied to the CSS class of the module (.moduleXXXXXX), this allows individual module styling" />
+		
+                <param name="default_css" type="radio" default="1" label="Use default Stylesheet" description="Include default stylesheet. Can be combined with a user stylesheet.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+
+		<param name="other_css" type="text" default="" label="User Stylesheet" description="Filename for user customized stylesheet. Can be used together or without the default one. Should be placed in modules/mod_goweather/css/" />
+
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+
+		<param name="show_name" type="radio" default="1" label="Show name" description="Show name inside our forecast box. Must be set if multiple locations are to be used!">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+
+		<param name="location1" type="text" size="50" default="" label="Location 1" description="Enter the page of yr.no location. e.g: United_States/New_York/New_York . You can easily find out page for wanted location via search function on yr.no. Special value is 'group' (creates a group label)"/>
+                <param name="name1" type="text" size="15"  default="" label="Name 1" description="This is the name displayed for location 1"/>
+                <param name="location2" type="text" size="50" default="" label="Location 2"/>
+                <param name="name2" type="text" size="15"  default="" label="Name 2"/>
+                <param name="location3" type="text" size="50" default="" label="Location 3"/>
+                <param name="name3" type="text" size="15"  default="" label="Name 3"/>
+                <param name="location4" type="text" size="50" default="" label="Location 4"/>
+                <param name="name4" type="text" size="15"  default="" label="Name 4"/>
+                <param name="location5" type="text" size="50" default="" label="Location 5"/>
+                <param name="name5" type="text" size="15"  default="" label="Name 5"/>
+                <param name="location6" type="text" size="50" default="" label="Location 6"/>
+                <param name="name6" type="text" size="15"  default="" label="Name 6"/>
+                <param name="location7" type="text" size="50" default="" label="Location 7"/>
+                <param name="name7" type="text" size="15"  default="" label="Name 7"/>
+                <param name="location8" type="text" size="50" default="" label="Location 8"/>
+                <param name="name8" type="text" size="15"  default="" label="Name 8"/>
+                <param name="location9" type="text" size="50" default="" label="Location 9"/>
+                <param name="name9" type="text" size="15"  default="" label="Name 9"/>
+                <param name="location10" type="text" size="50" default="" label="Location 10"/>
+                <param name="name10" type="text" size="15"  default="" label="Name 10"/>
+
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+
+		<param name="show_periodq0" type="radio" default="1" label="Show Period 1" description="Show forecasts for first quarter of the day">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="show_periodq1" type="radio" default="1" label="Show Period 2" description="Show forecasts for second quarter of the day">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="show_periodq2" type="radio" default="1" label="Show Period 3" description="Show forecasts for third quarter of the day">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="show_periodq3" type="radio" default="1" label="Show Period 4" description="Show forecasts for last quarter of the day">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+	</params>
+</install>
