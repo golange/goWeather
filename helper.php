@@ -76,31 +76,24 @@ class modGoWeatherHelper {
 			. sprintf( '%03d', $dir ) . '.png';
 	}
 
-	private function moonphase( $year, $month, $day ) {
-		//FIXME
-		
-		/* from yrWeather
-		 (modified from http://www.voidware.com/moon_phase.htm)
-		*/
-		$c = $e = $jd = $b = 0;
-		if ($month < 3) {
-			$year--;
-			$month += 12;
+	// Get current moon phase in percent (0 == new moon)
+	private function moonPhase ( $time ) {
+		$time -= 588900 ; // 7 January 1970 20:35, first new moon in Unix existance
+
+		$days = $time / 86400; // Days since that first new moon
+
+		$phase = $days / 29.5305882; // Divide with moon cycle
+
+		$phase -= (int)$phase; // Get remainder
+
+		$phase = (int)round( $phase * 100 );
+
+		if ($phase >= 100 ){
+			$phase = 0;
 		}
-		++$month;
-		$c = 365.25 * $year;
-		$e = 30.6 * $month;
-		$jd = $c + $e + $day - 694039.09;	//jd is total days elapsed
-		$jd /= 29.5305882;					//divide by the moon cycle
-		$b = (int) $jd;						//int(jd) -> b, take integer part of jd
-		$jd -= $b;							//subtract integer part to leave fractional part of original jd
-		$b = round($jd * 100);				//scale fraction and round
-		if ($b >= 100 ){
-			$b = 0;
-		}
-		return $b;
-	}		
-	
+		return $phase;
+	}
+
 	private function chillTemp( $temperatureC, $windSpeedKph ) {
 		// http://en.wikipedia.org/wiki/Wind_chill
 		
@@ -208,9 +201,8 @@ class modGoWeatherHelper {
 
 			$windArrow = modGoWeatherHelper::windArrowPath($windDeg, $windSpeedMps);
 			
-			$moonPhase = modGoWeatherHelper::moonphase( date( "Y", $middleSecs ), 
-														date( "m", $middleSecs ), 
-														date( "d", $middleSecs ));
+			$moonPhase =  modGoWeatherHelper::moonphase( $middleSecs );
+
 			$symbolImg = $symbolNumber;
 			if( $symbolImg < 10) {
 				$symbolImg = '0' . $symbolImg;
