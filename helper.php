@@ -201,8 +201,6 @@ class modGoWeatherHelper {
 
 			$windArrow = modGoWeatherHelper::windArrowPath($windDeg, $windSpeedMps);
 			
-			$moonPhase =  modGoWeatherHelper::moonphase( $middleSecs );
-
 			$symbolImg = $symbolNumber;
 			if( $symbolImg < 10) {
 				$symbolImg = '0' . $symbolImg;
@@ -221,6 +219,8 @@ class modGoWeatherHelper {
 				case '0':
 				case '3':
 					// Treat as night
+					$moonPhase =  modGoWeatherHelper::moonphase( $middleSecs );
+					
 					$symbolImg = 'mf/' . $symbolImg . 'n.' 
 						. sprintf( '%02d', $moonPhase);
 					break;
