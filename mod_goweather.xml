@@ -83,6 +83,9 @@
 			<option value="1">Yes</option>
 		</param>		
 
+		<param name="background_image_path" type="text" size="30" default="" label="My Background Image" description="Leave blank for default background image(s). Should be full path from /, e.g. modules/mod_goweather/imgs/my_bg.jpg">
+		</param>		
+
 		<param name="temp_color" type="radio" default="dynamic" label="Temperature Color" description="'Dynamic' changes color from very cold (blue) to very hot (red) in a smooth fashion. Freezing point will be color #800080. 'Red and blue' simply sets blue for below freezing, otherwise red.">
 			<option value="dynamic">Dynamic</option>
 			<option value="redblue">Red and blue</option>
@@ -95,7 +98,7 @@
 			<option value="1">Yes</option>
 		</param>
 
-		<param name="other_css" type="text" default="" label="User Stylesheet" description="Filename for user customized stylesheet. Can be used together or without the default one. Should be placed in modules/mod_goweather/css/" />
+		<param name="other_css" type="text" default="" label="User Stylesheet" description="Filename for user customized stylesheet. Can be used together or without the default one. Should be full path from /, e.g. modules/mod_goweather/css/my_style.css" />
 
 		<param name="@spacer" type="spacer" default="" label="" description="" />
 

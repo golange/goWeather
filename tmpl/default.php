@@ -35,10 +35,14 @@ if( $my->useBorders ){
 
 if ( $my->useBackgroundImage ) {
 	$localClass .= 'goWeatherImage ';
+
+	if ( $my->backgroundImage ) {
+		$localStyle .= 'background-image : url("' . $my->backgroundImage . '");';
+	}
 }
 
 if( $my->backgroundColor != 'inherit' ){
-	$localStyle .= "background-color : $my->backgroundColor;";
+	$localStyle .= 'background-color : ' . $my->backgroundColor . ';';
 }?>
 
 <!-- BEGIN goWeather
