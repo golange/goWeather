@@ -28,6 +28,7 @@ class modGoWeatherHelper {
 	public $useBorders;
 	public $backgroundColor;
 	public $useBackgroundImage;
+	public $backgroundImage;
 	public $celsius;
 	public $dynamicColors;
 	public $showPeriod = array();
@@ -63,6 +64,26 @@ class modGoWeatherHelper {
 		
 		return 'rgb(' . $red . ',0,' . $blue . ')';
 	}
+
+	// Find max temp in two first days
+	private function maxTemp( $dates ) {
+
+		if ( !$dates ) {
+			return NULL;
+		}
+
+		$max = -100;
+
+		for ( $i=0; $i < 2; $i++ ) {
+			foreach ( $dates[ $i ] as $period ) {
+				if ( $period[ 'temperatureC' ] > $max ) {
+					$max = $period[ 'temperatureC' ];
+				}
+			}
+		}
+		return $max;
+	}
+
 
 	private function windArrowPath($windDirection, $windSpeed){
 		$dir = round( (float)$windDirection / 10) * 10;
@@ -352,12 +373,16 @@ class modGoWeatherHelper {
 			}
 		}
 
+		$dates = modGoWeatherHelper::buildDates( &$my, &$weather );
+
 		$out = array();
 
-		$out[ 'dates' ] = modGoWeatherHelper::buildDates( &$my, &$weather );
+		$out[ 'header' ] = array( 'fetchedAt' => date( DATE_ISO8601 ),
+								  'maxTemp' => modGoWeatherHelper::maxTemp( &$dates )
+								  );
+		
+		$out[ 'dates' ] = $dates;
 
-		$out[ 'header' ] = array( 'fetchedAt' => date(DATE_ISO8601),
-										);
 		return $out;
 	}
 
@@ -500,6 +525,8 @@ class modGoWeatherHelper {
 		$my->backgroundColor = $params->get( 'background_color', 'inherit' );
 		
 		$my->useBackgroundImage = $params->get( 'background_image', '1' );
+		
+		$my->backgroundImage = $params->get( 'background_image_path', '' );
 		
 		$my->celsius = $params->get( 'temp', 'C' );
 
