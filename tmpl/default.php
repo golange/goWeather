@@ -77,6 +77,8 @@ if ( $my->showName ) {
 		else {
 			$newQuery = "?$thisQuery=";
 		}
+		
+		$newQuery = preg_replace( '/&/', '&amp;', $newQuery );
 
 		$action = "var newLoc='$newQuery';with (this){ with (weatherLoc){  top.location=newLoc.concat(value);}}";
 
