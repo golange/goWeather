@@ -604,8 +604,6 @@ class modGoWeatherHelper {
 					return;
 				}
 
-				var_dump( $images );
-
 				if ( $type == 'random' ) {
 					$my->backgroundImage = $juri->base() . $backgroundImage . '/'  
 						. modGoWeatherHelper::selectRandom( $images );
@@ -613,8 +611,6 @@ class modGoWeatherHelper {
 				else {
 					// FIXME dynamic
 				}
-
-				var_dump ( $my->backgroundImage );
 				break;
 
 			default:
