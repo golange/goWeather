@@ -75,16 +75,18 @@
 			<option value="1">Yes</option>
 		</param>
 
-                <param name="background_color" type="text" size="20" default="inherit" label="Background Color" description="Override template background color with your own value or use 'inherit' to inherit from template. Examples: white, grey, #F0F0F0. Has no effect if background image is used.">
+                <param name="background_color" type="text" size="20" default="inherit" label="Background Color" description="Override template background color with your own value or use 'inherit' to inherit from template. Examples: white, grey, #F0F0F0. Has no effect if background images are used.">
 		</param>		
 
-		<param name="background_image" type="radio" default="1" label="Use Background Image" description="">
-			<option value="0">No</option>
-			<option value="1">Yes</option>
-		</param>		
+		<param name="background_image_type" type="radio" default="single" label="Background Image(s)" description="Dynamic mode will choose an image using current max temp.">
+                        <option value="none">None</option>
+			<option value="single">Single</option>
+			<option value="random">Random</option>
+                        <option value="dynamic">Dynamic</option>
+		</param>
 
-		<param name="background_image_path" type="text" size="30" default="" label="My Background Image" description="Leave blank for default background image(s). Should be full path from /, e.g. modules/mod_goweather/imgs/my_bg.jpg">
-		</param>		
+		<param name="background_image_path" type="text" size="30" default="" label="User Background Image(s)" description="Leave blank for default background image(s). Should be full path from /, e.g. modules/mod_goweather/imgs/my_bg.jpg If 'random' or 'dynamic' is selected, the user directory where images are located should be entered.">
+		</param>
 
 		<param name="temp_color" type="radio" default="dynamic" label="Temperature Color" description="'Dynamic' changes color from very cold (blue) to very hot (red) in a smooth fashion. Freezing point will be color #800080. 'Red and blue' simply sets blue for below freezing, otherwise red.">
 			<option value="dynamic">Dynamic</option>
