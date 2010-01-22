@@ -19,9 +19,11 @@
 		<filename module="mod_goweather">tmpl/default.php</filename>
 		<filename module="mod_goweather">css/index.html</filename>
 		<filename module="mod_goweather">css/mod_goweather.css</filename>
-		<filename module="mod_goweather">imgs/index.html</filename>
-		<filename module="mod_goweather">imgs/clear_sky.jpg</filename>
-		<filename module="mod_goweather">imgs/date_bg.png</filename>
+		<filename module="mod_goweather">images/index.html</filename>
+		<filename module="mod_goweather">images/clear_sky.jpg</filename>
+		<filename module="mod_goweather">images/date_bg.png</filename>
+		<folder module="mod_goweather">images/wind</folder>
+		<folder module="mod_goweather">images/backgrounds</folder>
 	</files>
 
         <!-- Site Languages -->
@@ -85,7 +87,7 @@
                         <option value="dynamic">Dynamic</option>
 		</param>
 
-		<param name="background_image_path" type="text" size="30" default="" label="User Background Image(s)" description="Leave blank for default background image(s). Should be full path from /, e.g. modules/mod_goweather/imgs/my_bg.jpg If 'random' or 'dynamic' is selected, the user directory where images are located should be entered.">
+		<param name="background_image_path" type="text" size="30" default="" label="User Background Image(s)" description="Leave blank for default background image(s). Should be full path from /, e.g. modules/mod_goweather/images/my_bg.jpg If 'random' or 'dynamic' is selected, the user directory where images are located should be entered.">
 		</param>
 
 		<param name="temp_color" type="radio" default="dynamic" label="Temperature Color" description="'Dynamic' changes color from very cold (blue) to very hot (red) in a smooth fashion. Freezing point will be color #800080. 'Red and blue' simply sets blue for below freezing, otherwise red.">

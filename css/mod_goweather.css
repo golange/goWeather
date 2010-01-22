@@ -53,7 +53,7 @@ div.goWeather.goWeatherWrapper {
 }
 
 div.goWeather.goWeatherImage {
-    background-image    : url("../imgs/clear_sky.jpg");
+    background-image    : url("../images/clear_sky.jpg");
     background-position : top left;
     background-repeat   : no-repeat;
 }
@@ -77,7 +77,7 @@ div.goWeather div.goWeatherHead {
 }
 
 div.goWeather p.goWeatherDate {
-    background-image    : url("../imgs/date_bg.png");
+    background-image    : url("../images/date_bg.png");
     background-repeat   : repeat-x;
     font-size        : 12px;
     font-weight      : bold;
@@ -107,7 +107,7 @@ div.goWeather td.goWeatherTemp {
 }
 
 div.goWeather td.goWeatherWind {
-    background-image    : url("../imgs/wind/speed_0.png");
+    background-image    : url("../images/wind/speed_0.png");
     background-position : center bottom;
     background-repeat   : no-repeat;
     width       : 25%

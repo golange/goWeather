@@ -48,7 +48,7 @@ if( $my->backgroundColor != 'inherit' ){
 <!-- BEGIN goWeather
      Data from yr.no at <?php echo $weather['header']['fetchedAt'] ?> -->
 <center>
-<div class="goWeather goWeatherWrapper <?php echo $localClass;?>" style="<?php echo $localStyle;?>">
+<div class="goWeather goWeatherWrapper <?php echo $localClass;?>" style='<?php echo $localStyle;?>'>
 <!-- Main header -->
 <?php
 if ( $my->showName ) {

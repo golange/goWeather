@@ -36,6 +36,25 @@ class modGoWeatherHelper {
 	public $otherCSS;
 	public $time24h;
 
+	private function getImages( $dir ) {
+		$files	= array();
+		if ( $handle = opendir( $dir )) {
+			while ( false !== ( $file = readdir( $handle ))) {
+				if ( $file != '.' && $file != '..' && $file != 'index.html' ) {
+					$files[] = $file;
+				}
+			}
+		}
+		closedir( $handle );
+		
+		return $files;
+	}
+
+	private function selectRandom( $data ) {
+		$i = count( $data );
+		return $data[ mt_rand(0, $i - 1) ];
+	}
+
 	private function getTempColor( $temperatureC, $dynamic ) {
 		if( !$dynamic ){
 			if ( $temperatureC < 0 ) {
@@ -243,8 +262,8 @@ class modGoWeatherHelper {
 			$windMeter = modGoWeatherHelper::windMeter( (int)round( $windSpeedMps ));
 
 			$juri = &JURI::getInstance();
-			$windArrow = $juri->base() . 'modules/mod_goweather/imgs/wind/' . $windArrow;
-			$windMeter = $juri->base() . 'modules/mod_goweather/imgs/wind/' . $windMeter;
+			$windArrow = $juri->base() . 'modules/mod_goweather/images/wind/' . $windArrow;
+			$windMeter = $juri->base() . 'modules/mod_goweather/images/wind/' . $windMeter;
 
 			$symbolImg = $symbolNumber;
 			if( $symbolImg < 10) {
@@ -551,34 +570,63 @@ class modGoWeatherHelper {
 
 		$type = $params->get( 'background_image_type', 'single' );
 
+		$juri = &JURI::getInstance();
+		$defaultImgDir = $juri->base() . 'modules/mod_goweather/images/';
+
 		if ( $type == 'none' ) {
 			$my->useBackgroundImage = false;
 		}
 		else {
 			$my->useBackgroundImage = true;
-			$backgroundImage = $params->get( 'background_image_path', '' );
+			$backgroundImage = $params->get( 'background_image_path', NULL );
 		
-			// FIXME handle default also
-
 			switch ( $type ) {
 			case 'random':
-				if (is_dir(JPATH_SITE . $backgroundImage)) {
-					if ( $my->debug ) {
-						JError::raiseWarning( '', JPATH_SITE . $backgroundImage . ' is not a directory'  );
+			case 'dynamic':
+				if ( !$backgroundImage ) {
+					$backgroundImage = '/modules/mod_goweather/images/backgrounds';
+				} 
+				else {
+					if ( !is_dir(JPATH_SITE . '/' . $backgroundImage)) {
+						if ( $my->debug ) {
+							JError::raiseWarning( '', JPATH_SITE . $backgroundImage . ' is not a directory'  );
+							
+						}
+						return;
+					}
+				}
+				$images = modGoWeatherHelper::getImages( JPATH_SITE . '/' . $backgroundImage );
 
+				if ( !$images ) {
+					if ( $my->debug ) {
+						JError::raiseWarning( '', $backgroundImage . ' is empty'  );
 					}
 					return;
 				}
-				break;
 
-			case 'dynamic':
+				var_dump( $images );
+
+				if ( $type == 'random' ) {
+					$my->backgroundImage = $juri->base() . $backgroundImage . '/'  
+						. modGoWeatherHelper::selectRandom( $images );
+				}
+				else {
+					// FIXME dynamic
+				}
+
+				var_dump ( $my->backgroundImage );
 				break;
 
 			default:
-				if (is_file(JPATH_SITE . $backgroundImage)) {
-					if ( $my->debug ) {
-						JError::raiseWarning( '', JPATH_SITE . $backgroundImage . ' is not a file'  );
-						
+				if ( !$backgroundImage ) {
+					$backgroundImage = $defaultImgDir . 'clear_sky.jpg';
+				}
+				else {
+					if ( !is_file(JPATH_SITE . $backgroundImage )) {
+						if ( $my->debug ) {
+							JError::raiseWarning( '', JPATH_SITE . $backgroundImage . ' is not a file'  );
+							
+						}
 					}
 				}
 				$my->backgroundImage = $backgroundImage;
@@ -586,10 +634,6 @@ class modGoWeatherHelper {
 			}
 		}
 
-		$my->useBackgroundImage = $params->get( 'background_image', '1' );
-		
-		$my->backgroundImage = $params->get( 'background_image_path', '' );
-		
 		$my->celsius = $params->get( 'temp', 'C' );
 
 		$my->dynamicColors = $params->get( 'temp_color', '1' );
