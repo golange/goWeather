@@ -85,16 +85,35 @@ class modGoWeatherHelper {
 	}
 
 
-	private function windArrowPath($windDirection, $windSpeed){
+	private function windArrow( $windDirection ){
 		$dir = round( (float)$windDirection / 10) * 10;
 		
 		if( $dir >= 360 ){
 			$dir = 0;
 		}
 		
-		return 'http://fil.nrk.no/yr/grafikk/vindpiler/32/' . 'vindpil.' 
-			. sprintf( '%04d', round($windSpeed * 10 / 25) * 25) . '.' 
-			. sprintf( '%03d', $dir ) . '.png';
+		return 'arrow_' . $dir . '.png';
+
+	}
+
+	private function windMeter( $windSpeed ){
+		if ( $windSpeed <= 25 ) {
+			$meter = $windSpeed;
+		}
+		elseif ( $windSpeed >= 35 ) {
+			$meter = 35;
+		}
+		else {
+			// 2 m/s per pixel on red scale
+			if ( $windSpeed & 1 ) {
+				$meter = $windSpeed;
+			}
+			else {
+				$meter = $windSpeed + 1;
+			}
+		}
+
+		return 'speed_' . $meter . '.png';
 	}
 
 	// Get current moon phase in percent (0 == new moon)
@@ -220,8 +239,13 @@ class modGoWeatherHelper {
 			
 			$windDeg = (float)$item->windDirection[deg];
 
-			$windArrow = modGoWeatherHelper::windArrowPath($windDeg, $windSpeedMps);
-			
+			$windArrow = modGoWeatherHelper::windArrow( $windDeg );
+			$windMeter = modGoWeatherHelper::windMeter( (int)round( $windSpeedMps ));
+
+			$juri = &JURI::getInstance();
+			$windArrow = $juri->base() . 'modules/mod_goweather/imgs/wind/' . $windArrow;
+			$windMeter = $juri->base() . 'modules/mod_goweather/imgs/wind/' . $windMeter;
+
 			$symbolImg = $symbolNumber;
 			if( $symbolImg < 10) {
 				$symbolImg = '0' . $symbolImg;
@@ -286,6 +310,7 @@ class modGoWeatherHelper {
 										  'windSpeedMph' => $windSpeedMph,
 										  'windSpeedKph' => $windSpeedKph,
 										  'windArrow' => $windArrow,
+										  'windMeter' => $windMeter,
 										  'temperatureC' => $temperatureC,
 										  'temperatureF' => $temperatureF,
 										  'temperatureChillC' => $temperatureChillC,

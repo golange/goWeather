@@ -162,7 +162,7 @@ if ( $weather ) foreach ( $weather[ 'dates' ] as $currentDay ) {
 				   ?>&deg;<font style="font-size:smaller;"><?php 
 							   echo $my->celsius;
 			?></font></font></td>
-					<td class="goWeatherWind hasTip" title="<?php echo $period[ 'windSpeed' . $my->speed ];?>"><img src="<?php echo $period['windArrow'];?>" alt="<?php echo $period[ 'windSpeed' . $my->speed ];?>"/></td>
+					<td class="goWeatherWind hasTip" title="<?php echo $period[ 'windSpeed' . $my->speed ];?>" style='background-image : url("<?php echo $period['windMeter']?>");'><img src="<?php echo $period['windArrow'];?>" alt="<?php echo $period[ 'windSpeed' . $my->speed ];?>"/></td>
 					</tr><?php	
 					}
 	}
