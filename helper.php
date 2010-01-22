@@ -523,7 +523,44 @@ class modGoWeatherHelper {
 		$my->useBorders = $params->get( 'borders', '1' );
 		
 		$my->backgroundColor = $params->get( 'background_color', 'inherit' );
+
+		$type = $params->get( 'background_image_type', 'single' );
+
+		if ( $type == 'none' ) {
+			$my->useBackgroundImage = false;
+		}
+		else {
+			$my->useBackgroundImage = true;
+			$backgroundImage = $params->get( 'background_image_path', '' );
 		
+			// FIXME handle default also
+
+			switch ( $type ) {
+			case 'random':
+				if (is_dir(JPATH_SITE . $backgroundImage)) {
+					if ( $my->debug ) {
+						JError::raiseWarning( '', JPATH_SITE . $backgroundImage . ' is not a directory'  );
+
+					}
+					return;
+				}
+				break;
+
+			case 'dynamic':
+				break;
+
+			default:
+				if (is_file(JPATH_SITE . $backgroundImage)) {
+					if ( $my->debug ) {
+						JError::raiseWarning( '', JPATH_SITE . $backgroundImage . ' is not a file'  );
+						
+					}
+				}
+				$my->backgroundImage = $backgroundImage;
+				break;
+			}
+		}
+
 		$my->useBackgroundImage = $params->get( 'background_image', '1' );
 		
 		$my->backgroundImage = $params->get( 'background_image_path', '' );
