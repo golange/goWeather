@@ -43,6 +43,26 @@ if ( $my->useBackgroundImage ) {
 
 if( $my->backgroundColor != 'inherit' ){
 	$localStyle .= 'background-color : ' . $my->backgroundColor . ';';
+}
+
+
+// We need to keep old query string
+// FIXME There must be a smarter way to do this?
+
+$oldQuery = $juri->getQuery( true );
+
+// Kill current module settings (if any)
+unset( $oldQuery[ modGoWeatherHelper::QUERYID . $module->id ] );
+unset( $oldQuery[ modGoWeatherHelper::QUERYDAY . $module->id ] );
+
+$oldQuery = $juri->buildQuery( $oldQuery );
+
+if( $oldQuery ) {
+	$newQuery = "?$oldQuery" . '&';
+	$newQuery = preg_replace( '/&/', '&amp;', $newQuery );
+}
+else {
+	$newQuery = '?';
 }?>
 
 <!-- BEGIN goWeather
@@ -59,28 +79,8 @@ if ( $my->showName ) {
 	else {
 		?><div class="hasTip goWeatherHead" title="<?php echo JText::_( 'Choose location' );?>">
 		<form method="get" action=""><?php
-		// We need to keep old query string
-		// FIXME There must be a smarter way to do this?
-		
-		$oldQuery = $juri->getQuery( true );
-		
-		$thisQuery = modGoWeatherHelper::QUERYID . $module->id;
-		
-		// Kill current module setting (if any)
-		unset( $oldQuery[ $thisQuery ] );
-			
-		$oldQuery = $juri->buildQuery( $oldQuery );
-
-		if( $oldQuery ) {
-			$newQuery = "?$oldQuery" . '&' . "$thisQuery=";
-		}
-		else {
-			$newQuery = "?$thisQuery=";
-		}
-		
-		$newQuery = preg_replace( '/&/', '&amp;', $newQuery );
-
-		$action = "var newLoc='$newQuery';with (this){ with (weatherLoc){  top.location=newLoc.concat(value);}}";
+		$action = "var newLoc='" . $newQuery . modGoWeatherHelper::QUERYID . $module->id  
+		. "=';with (this){ with (weatherLoc){  top.location=newLoc.concat(value);}}";
 
 		?><select name="weatherLoc" onchange="<?php echo $action;?>">
 		<?php
@@ -164,7 +164,7 @@ if ( $weather ) {
 												strtotime( '-' . $my->days . ' day' ,
 														   strtotime( $currentDay->dayOfMonth . ' ' . $currentDay->month)));?>
 
-						   <td class="goWeatherArrow hasTip" title="Previous day"> <a href="?<?php echo modGoWeatherHelper::QUERYDAY . $module->id . '=' . $previousDay;?>"><img src="<?php echo $modulePath;?>images/arrow_up.png"/></a></td>
+						   <td class="goWeatherArrow hasTip" title="Previous day"> <a href="<?php echo $newQuery . modGoWeatherHelper::QUERYDAY . $module->id . '=' . $previousDay;?>"><img src="<?php echo $modulePath;?>images/arrow_up.png"/></a></td>
 						   <?php
 					   }
 					   else {
@@ -224,7 +224,7 @@ if ( $weather ) {
 	<table><tr><?php
 	if ( $my->scroll and $downArrow ) {
 		?><td class="goWeatherArrow hasTip" title="Next day"> <a href="<?php 
-echo '?' . modGoWeatherHelper::QUERYDAY . $module->id . '=' . $currentDay->dayOfMonth;?>"><img src="<?php echo $modulePath;?>images/arrow_down.png"/></a></td>
+echo $newQuery . modGoWeatherHelper::QUERYDAY . $module->id . '=' . $currentDay->dayOfMonth;?>"><img src="<?php echo $modulePath;?>images/arrow_down.png"/></a></td>
 		<?php 
 	}
 	else {?>
