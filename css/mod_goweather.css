@@ -76,13 +76,16 @@ div.goWeather div.goWeatherHead {
     width               : 100%;
 }
 
-div.goWeather p.goWeatherDate {
-    background-image    : url("../images/date_bg.png");
-    background-repeat   : repeat-x;
+div.goWeather div.goWeatherDate p {
     font-size        : 12px;
     font-weight      : bold;
     padding-top      : 4px;
     height           : 16px;
+}
+
+div.goWeather div.goWeatherDate {
+    background-image    : url("../images/date_bg.png");
+    background-repeat   : repeat-x;
 }
 
 div.goWeather td.goWeatherTime font.goWeatherTime12h {
@@ -113,7 +116,17 @@ div.goWeather td.goWeatherWind {
     width       : 25%
 }
 
-div.goWeather .goWeatherFooter {
+div.goWeather td.goWeatherLink  { 
+    width : 70%;
+}
+
+div.goWeather td.goWeatherArrow,
+div.goWeather td.goWeatherBlank, 
+div.goWeather td.goWeatherUser { 
+    width : 15%;
+}
+
+div.goWeather div.goWeatherFooter {
     padding-bottom : 7px;
     font-weight    : bold;
     font-size      : 14px;

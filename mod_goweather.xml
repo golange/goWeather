@@ -69,6 +69,10 @@
 		</param>		
 
 		<param name="days" type="text" default="2" label="Max number of days" description="Max number of days to show forecast for." />
+		<param name="scroll" type="radio" default="1" label="Allow Scrolling" description="Scroll up and down through days.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
 
 		<param name="@spacer" type="spacer" default="" label="" description="" />
 

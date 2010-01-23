@@ -13,16 +13,16 @@ JHTML::_('behavior.tooltip');
 
 $juri = &JURI::getInstance();
 
-$cssPath = $juri->base() . '/modules/mod_goweather/css/';
+$modulePath = $juri->base() . '/modules/mod_goweather/';
 
 $document = &JFactory::getDocument(); 
 
 if( $my->useDefaultCSS ) {
-	$document->addStyleSheet( $cssPath . 'mod_goweather.css' );
+	$document->addStyleSheet( $modulePath . 'css/mod_goweather.css' );
 }
 
 if( $my->otherCSS ) {
-	$document->addStyleSheet( $cssPath . $my->otherCSS );
+	$document->addStyleSheet( $my->otherCSS );
 }
 
 // Local overrides
@@ -119,26 +119,61 @@ if ( $my->showName ) {
 <?php
 $dateCount = 0;
 $tableOpen = false;
+$downArrow = false;
+$skipToDate = $my->firstDay;
 
-if ( $weather ) foreach ( $weather[ 'dates' ] as $currentDay ) {
-	$headerDone = false;
+if ( $weather ) { 
+	do { 
+		$upArrow = false;
+		
+		foreach ( $weather[ 'dates' ] as $currentDay ) {
+			$headerDone = false;
+			
+			if( $skipToDate ) {
+		if ( $skipToDate != (int)$currentDay->dayOfMonth ) {
+			$upArrow = true;
+			continue;
+		}
+		else {
+			$skipToDate = NULL;
+		}
+	}
+
 	if( $dateCount >= $my->days ) {
+		// We have more days in data
+		$downArrow = true;
 		break;
 	}
 	
-	foreach ( $currentDay as $period ) { 
+	foreach ( $currentDay->periods as $period ) { 
 		if( $my->showPeriod[ $period[ 'period' ] ]){
 			if( !$headerDone ) {
 				$dateCount++;
 				// Date header
 				$headerDone = true;
 				
-				$date = ucfirst( JText::_( $period[ 'dayOfWeek' ])) . ' ' 
-					. $period[ 'dayOfMonth' ] . ' '
-					. ucfirst( JText::_($period[ 'month' ] . '_short'));
+				$date = ucfirst( JText::_( $currentDay->dayOfWeek )) . ' ' 
+					. $currentDay->dayOfMonth . ' '
+					. ucfirst( JText::_($currentDay->month . '_short'));
 				
-				?><p class="goWeatherDate"><?php echo $date;?></p><table><?php
-																	$tableOpen = true;
+				?><div class="goWeatherDate">
+					   <table><tr><?php
+					   if ( $upArrow ) {
+						   $upArrow = false;
+						   $previousDay = date( 'j', 
+												strtotime( '-' . $my->days . ' day' ,
+														   strtotime( $currentDay->dayOfMonth . ' ' . $currentDay->month)));?>
+
+						   <td class="goWeatherArrow hasTip" title="Previous day"> <a href="?<?php echo modGoWeatherHelper::QUERYDAY . $module->id . '=' . $previousDay;?>"><img src="<?php echo $modulePath;?>images/arrow_up.png"/></a></td>
+						   <?php
+					   }
+					   else {
+						   ?><td class="goWeatherBlank"></td><?php
+							   }?>
+					   <td class="goWeatherDate"><?php echo $date;?>
+							</td><td class="goWeatherBlank"></td>
+								  </div><table><?php
+								  $tableOpen = true;
 			}?>
 				
 				<tr><td class="goWeatherTime hasTip" title=<?php echo '"' 
@@ -172,14 +207,38 @@ if ( $weather ) foreach ( $weather[ 'dates' ] as $currentDay ) {
 		?></table><?php
 			$tableOpen = false;
 	}
-}
+		} // foreach
+
+		if ( !$skipToDate ) {
+			break;
+		}
+		// Date not found. Could happen if new forecast is loaded while we watch. 
+		// Try again from start this time
+		$skipToDate = NULL;
+	} while (true);
+} // if
+
 ?>
 
+<div class="goWeatherFooter">
+	<table><tr><?php
+	if ( $my->scroll and $downArrow ) {
+		?><td class="goWeatherArrow hasTip" title="Next day"> <a href="<?php 
+echo '?' . modGoWeatherHelper::QUERYDAY . $module->id . '=' . $currentDay->dayOfMonth;?>"><img src="<?php echo $modulePath;?>images/arrow_down.png"/></a></td>
+		<?php 
+	}
+	else {?>
+		<td class="goWeatherBlank"></td><?php	
+			}
+?>
 <!-- Required by yr.no for use -->
-<p class="goWeatherFooter">
-	<a href="http://www.yr.no/place/<?php echo $my->currentTarget->location . '/' . $my->yrLink;?>" target="_blank">
+<td class="goWeatherLink"><a href="http://www.yr.no/place/<?php echo $my->currentTarget->location . '/' . $my->yrLink;?>" target="_blank">
 	<span class="hasTip" title="<?php echo JText::_('Forecast source')?>"><?php 
-	echo JText::_( 'Go to' )?> yr.no</span></a></p>
+	echo JText::_( 'Go to' )?> yr.no</span></a></td>
+	
+    <td class="goWeatherUser"></td>
+    </tr></table>
+    </div>
 	</div>
 	</div>
 	</center>

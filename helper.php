@@ -14,9 +14,17 @@ class modGoWeatherTarget {
 	public $id;
 }
 
+class modGoWeatherDate {
+	public $dayOfWeek;
+	public $dayOfMonth;
+	public $month;
+	public $periods = array();
+}
+
 class modGoWeatherHelper {
 	const MAXLOCATIONS = 10;
 	const QUERYID = 'modgowid';
+	const QUERYDAY = 'modgowday';
 
 	public $debug = false;
 	public $showName;
@@ -35,6 +43,7 @@ class modGoWeatherHelper {
 	public $useDefaultCSS;
 	public $otherCSS;
 	public $time24h;
+	public $firstDay;
 
 	private function getImages( $dir ) {
 		$files	= array();
@@ -196,7 +205,7 @@ class modGoWeatherHelper {
 	// Sort per date and prepare most of the data now to save resources (will be cached)
 	private function buildDates( $my, $xmlData ) {
 		$dates = array();
-		$thisDate = array();
+		$thisDate = new modGoWeatherDate();
 		$lastDay = '';
 		
 		foreach ( $xmlData->forecast->tabular->time as $item ) {
@@ -204,23 +213,22 @@ class modGoWeatherHelper {
 			$toSecs = strtotime( $item[to] );
 			$middleSecs = ( $toSecs + $fromSecs ) / 2;
 
-			$dayOfWeek = date( 'l', $middleSecs );
-			$dayOfMonth = date( 'j', $middleSecs );
-			$month = date( 'F', $middleSecs ); 
-				
 			$period = (string)$item[period];
 			
-			if ( !$lastDay ){
+			$dayOfMonth = date( 'j', $middleSecs );
+				
+			if ( !$lastDay or $lastDay != $dayOfMonth or $period == '0' ){
 				$lastDay = $dayOfMonth;
-			}
-			else {
-				if ( $lastDay != $dayOfMonth or $period == '0' ){
-					$lastDay = $dayOfMonth;
+				
+				if ( $thisDate->periods ) {
 					$dates[] = $thisDate;
-					$thisDate = array();
+					$thisDate = new modGoWeatherDate();
 				}
+				$thisDate->dayOfWeek = date( 'l', $middleSecs );
+				$thisDate->month = date( 'F', $middleSecs );  
+				$thisDate->dayOfMonth = $dayOfMonth;
 			}
-			
+
 			$symbolNumber = (int)$item->symbol[number];
 			
 			// FIXME YR Says 'fair' for symbol 1??? 
@@ -319,7 +327,7 @@ class modGoWeatherHelper {
 			$period24h = date( "H:i", $fromSecs ) . ' - ' . date("H:i", $toSecs ); 
 			$period12h = date( "g A", $fromSecs ) . ' - ' . date("g A", $toSecs ); 
 
-			$thisDate[ $period ] = array( 'period' => $period,
+			$thisDate->periods[] = array( 'period' => $period,
 										  'symbolFile' => $symbolImg,
 										  'symbolName' => $symbolName, 
 										  'precipitationMm' => $precipitationMm,
@@ -335,9 +343,6 @@ class modGoWeatherHelper {
 										  'temperatureChillC' => $temperatureChillC,
 										  'temperatureChillF' => $temperatureChillF,
 										  'temperatureColor' =>  $temperatureColor,
-										  'dayOfWeek' => $dayOfWeek,
-										  'dayOfMonth' => $dayOfMonth,
-										  'month' => $month,
 										  'middle24h' => $middle24h,
 										  'middle12h' => $middle12h, 
 										  'period24h' => $period24h,
@@ -542,11 +547,20 @@ class modGoWeatherHelper {
 				}
 			}
 		}
+
+		$my->scroll = (int)$params->get('scroll', '1');
 		
+		if ( $my->scroll ) {
+			$my->firstDay = JRequest::getVar( modGoWeatherHelper::QUERYDAY . $module->id, NULL, 'get', 'int' );
+		}
+		else {
+			$my->firstDay = NULL;
+		}
+
 		$my->yrLink = $params->get('yrlink', '');
 		
 		$my->days = (int)$params->get('days', '2');
-		
+
 		if ( $my->days > 9 ) {
 			$my->days = 9;
 		}
