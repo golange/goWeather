@@ -15,7 +15,7 @@ $my = modGoWeatherHelper::init( $params, $module );
 
 if ( $my ) {
 	if ( !$my->debug ){
-		if (!is_writable( JPATH_BASE . DS . 'cache' )) {
+		if ( !is_writable( JPATH_BASE . DS . 'cache' )) {
 			JError::raiseWarning( '', JText::_( 'Cache directory unwritable' ));
 		}
 		

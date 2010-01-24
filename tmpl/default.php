@@ -33,12 +33,12 @@ if( $my->useBorders ){
 	$localClass .= 'goWeatherBorder ';
 }
 
-if ( $my->useBackgroundImage ) {
-	$localClass .= 'goWeatherImage ';
+$backgroundImage = modGoWeatherHelper::getBackgroundImage( &$params, &$my, &$weather );
 
-	if ( $my->backgroundImage ) {
-		$localStyle .= 'background-image : url("' . $my->backgroundImage . '");';
-	}
+if ( $backgroundImage ) {
+	$localClass .= 'goWeatherImage ';
+	
+	$localStyle .= 'background-image : url("' . $backgroundImage . '");';
 }
 
 if( $my->backgroundColor != 'inherit' ){
