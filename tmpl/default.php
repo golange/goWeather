@@ -48,21 +48,25 @@ if( $my->backgroundColor != 'inherit' ){
 // We need to keep old query string
 // FIXME There must be a smarter way to do this?
 
+// Kill current module settings (if any)
+
+$path = $juri->getPath();
+
 $oldQuery = $juri->getQuery( true );
 
-// Kill current module settings (if any)
-unset( $oldQuery[ modGoWeatherHelper::QUERYDAY . $module->id ] );
+if ( $my->scroll ) {
+	unset( $oldQuery[ modGoWeatherHelper::QUERYDAY . $module->id ] );
 
-$oldQueryDate = $juri->buildQuery( $oldQuery );
+	$oldQueryDate = $juri->buildQuery( $oldQuery );
+
+	$oldQueryDate = modGoWeatherHelper::fixQuery( &$path, $oldQueryDate );
+}
 
 unset( $oldQuery[ modGoWeatherHelper::QUERYID . $module->id ] );
 
 $oldQueryId = $juri->buildQuery( $oldQuery );
 
-$path = $juri->getPath();
-
-$oldQueryId = modGoWeatherHelper::fixQuery( &$path, $oldQueryId );
-$oldQueryDate = modGoWeatherHelper::fixQuery( &$path, $oldQueryDate );?>
+$oldQueryId = modGoWeatherHelper::fixQuery( &$path, $oldQueryId );?>
 
 <!-- BEGIN goWeather
      Data from yr.no at <?php echo $weather['header']['fetchedAt'] ?> -->
