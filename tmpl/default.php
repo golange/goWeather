@@ -167,7 +167,7 @@ if ( $weather ) {
 												strtotime( '-' . $my->days . ' day' ,
 														   strtotime( $currentDay->dayOfMonth . ' ' . $currentDay->month)));?>
 
-						   <td class="goWeatherArrow hasTip" title="<?php echo JText::_('Scroll')?>"> <a href="<?php echo $oldQueryDate . modGoWeatherHelper::QUERYDAY . $module->id . '=' . $previousDay;?>"><img src="<?php echo $modulePath;?>images/arrow_up.png"/></a></td>
+						   <td class="goWeatherArrow hasTip" title="<?php echo JText::_('Scroll')?>"> <a href="<?php echo $oldQueryDate . modGoWeatherHelper::QUERYDAY . $module->id . '=' . $previousDay;?>"><img src="<?php echo $modulePath;?>images/arrow_up.png" alt="Scroll up"/></a></td>
 						   <?php
 					   }
 					   else {
@@ -175,7 +175,7 @@ if ( $weather ) {
 							   }?>
 					   <td class="goWeatherDate"><?php echo $date;?>
 							</td><td class="goWeatherBlank"></td>
-								  </div><table><?php
+								  </tr></table></div><table><?php
 								  $tableOpen = true;
 			}?>
 				
@@ -227,7 +227,7 @@ if ( $weather ) {
 	<table><tr><?php
 	if ( $my->scroll and $downArrow ) {
 		?><td class="goWeatherArrow hasTip" title="<?php echo JText::_('Scroll')?>"> <a href="<?php 
-echo $oldQueryDate . modGoWeatherHelper::QUERYDAY . $module->id . '=' . $currentDay->dayOfMonth;?>"><img src="<?php echo $modulePath;?>images/arrow_down.png"/></a></td>
+echo $oldQueryDate . modGoWeatherHelper::QUERYDAY . $module->id . '=' . $currentDay->dayOfMonth;?>"><img src="<?php echo $modulePath;?>images/arrow_down.png" alt="Scroll down"/></a></td>
 		<?php 
 	}
 	else {?>
