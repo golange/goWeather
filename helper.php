@@ -45,6 +45,20 @@ class modGoWeatherHelper {
 	public $time24h;
 	public $firstDay;
 
+	public function fixQuery( $path, $query ) {
+		if ( $path[strlen($path) - 1] != '/' ) {
+			$path .= '/';
+		}
+		
+		if( $query ) {
+			$newQuery .= "?$query" . '&';
+			return preg_replace( '/&/', '&amp;', $newQuery );
+		}
+		else {
+			return $path . '?';
+		}
+	}
+
 	private function getImages( $dir ) {
 		$files	= array();
 		if ( $handle = opendir( $dir )) {
