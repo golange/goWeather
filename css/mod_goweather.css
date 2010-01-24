@@ -55,7 +55,7 @@ div.goWeather.goWeatherWrapper {
 div.goWeather.goWeatherImage {
     background-image    : url("../images/clear_sky.jpg");
     background-position : top left;
-    background-repeat   : no-repeat;
+    background-repeat   : repeat;
 }
 
 div.goWeather.goWeatherBorder { 
