@@ -159,24 +159,21 @@ if ( $weather ) {
 					. $currentDay->dayOfMonth . ' '
 					. ucfirst( JText::_($currentDay->month . '_short'));
 				
-				?><div class="goWeatherDate">
-					   <table><tr><?php
+				?><div class="goWeatherDate"><table><tr><?php
 					   if ( $upArrow ) {
 						   $upArrow = false;
 						   $previousDay = date( 'j', 
 												strtotime( '-' . $my->days . ' day' ,
 														   strtotime( $currentDay->dayOfMonth . ' ' . $currentDay->month)));?>
-
-						   <td class="goWeatherArrow hasTip" title="<?php echo JText::_('Scroll')?>"> <a href="<?php echo $oldQueryDate . modGoWeatherHelper::QUERYDAY . $module->id . '=' . $previousDay;?>"><img src="<?php echo $modulePath;?>images/arrow_up.png" alt="Scroll up"/></a></td>
-						   <?php
+						   <td class="goWeatherArrow hasTip" title="<?php echo JText::_('Scroll')?>"> <a href="<?php echo $oldQueryDate . modGoWeatherHelper::QUERYDAY . $module->id . '=' . $previousDay;?>"><img src="<?php echo $modulePath;?>images/arrow_up.png" alt="Scroll up"/></a></td><?php
 					   }
 					   else {
 						   ?><td class="goWeatherBlank"></td><?php
-							   }?>
-					   <td class="goWeatherDate"><?php echo $date;?>
-							</td><td class="goWeatherBlank"></td>
-								  </tr></table></div><table><?php
-								  $tableOpen = true;
+							   }
+				?><td class="goWeatherDate"><?php echo $date;
+				?></td><td class="goWeatherBlank"></td>
+						</tr></table></div><table><?php
+						$tableOpen = true;
 			}?>
 				
 				<tr><td class="goWeatherTime hasTip" title=<?php echo '"' 
