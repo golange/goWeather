@@ -566,6 +566,12 @@ class modGoWeatherHelper {
 		
 		if ( $my->scroll ) {
 			$my->firstDay = JRequest::getVar( modGoWeatherHelper::QUERYDAY . $module->id, NULL, 'get', 'int' );
+			if ( $my->firstDay ) {
+				if ( $my->firstDay < 1 or $my->firstDay > 31 ) {
+					// Could be hack attempt. Paranoia.
+					$my->firstDay = NULL;
+				}
+			}
 		}
 		else {
 			$my->firstDay = NULL;
