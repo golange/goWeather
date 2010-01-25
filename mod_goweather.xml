@@ -22,6 +22,8 @@
 		<filename module="mod_goweather">images/index.html</filename>
 		<filename module="mod_goweather">images/clear_sky.jpg</filename>
 		<filename module="mod_goweather">images/date_bg.png</filename>
+		<filename module="mod_goweather">images/arrow_down.png</filename>
+		<filename module="mod_goweather">images/arrow_up.png</filename>
 		<folder module="mod_goweather">images/wind</folder>
 		<folder module="mod_goweather">images/backgrounds</folder>
 	</files>
