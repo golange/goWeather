@@ -190,10 +190,14 @@ if ( $weather ) {
 				$title .= ', ' . $precipitation;
 			}
 			
-			?><td class="goWeatherSymbol hasTip" title="<?php echo $title;?>"><img src="http://fil.nrk.no/yr/grafikk/sym/b38/<?php echo $period['symbolFile']?>.png" alt="<?php echo $title;?>"/></td>
-				   <td class="goWeatherTemp hasTip" title=<?php echo '"' . JText::_("Feels like") 
-				   . ' ' . ($period[ 'temperatureChill' . $my->celsius ]) . '&deg;' . $my->celsius . '">';
-			
+			?><td class="goWeatherSymbol hasTip" title="<?php echo $title;?>"><img src="http://fil.nrk.no/yr/grafikk/sym/b38/<?php echo $period['symbolFile']?>.png" alt="<?php echo $title;?>"/></td><?php
+				   if ( $period[ 'temperatureChillC' ] === NULL ) {
+					   ?><td class="goWeatherTemp"><?php 
+				   }
+				   else {?>
+					   <td class="goWeatherTemp hasTip" title=<?php echo '"' . JText::_("Feels like") 
+						   . ' ' . ($period[ 'temperatureChill' . $my->celsius ]) . '&deg;' . $my->celsius . '">';
+				   }
 			?><font style="color:<?php echo $period['temperatureColor']?>;"><?php
 				   echo $period[ 'temperature' . $my->celsius ]
 				   ?>&deg;<font style="font-size:smaller;"><?php 

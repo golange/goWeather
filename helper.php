@@ -71,7 +71,7 @@ class modGoWeatherHelper {
 		return $files;
 	}
 
-	// Find first file that has temp below that in filename
+	// Find first file that has temp above that in filename
 	public function chooseViaTemp( $my, $temp, $files ) {
 		sort( $files, SORT_NUMERIC );
 		foreach ( $files as $file ) {
@@ -198,15 +198,18 @@ class modGoWeatherHelper {
 	private function chillTemp( $temperatureC, $windSpeedKph ) {
 		// http://en.wikipedia.org/wiki/Wind_chill
 		
+		// Windchill Temperature is only defined for temperatures at or below 10C (50F) 
+		// and wind speeds above 4.8 kilometres per hour (3.0 mph)
+
+		if ( $temperatureC > 10 or $windSpeedKph <= 4.8 ) {
+			return;
+		}
+
 		$chill = 13.12 
 			+ ( 0.6215 * $temperatureC ) 
 			+ ( 0.3965 * $temperatureC * pow( $windSpeedKph, 0.16 )) 
 			- ( 11.37 * pow( $windSpeedKph, 0.16 ));
 		
-		if ( $chill > $temperatureC ){
-			// Not enough wind to create chill effect and then formula actually gives higher temp!
-			return $temperatureC;
-		}
 		return $chill;
 	}
 
@@ -291,10 +294,11 @@ class modGoWeatherHelper {
 
 			$temperatureChillC = modGoWeatherHelper::chillTemp( $temperatureC, $windSpeedKph );
 			
-			$temperatureChillF = (int)round( $temperatureChillC * 9/5 + 32 ); 
-			
-			$temperatureChillC = (int)round( $temperatureChillC ); 
-			
+			if ( $temperatureChillC !== NULL ) {
+				$temperatureChillF = (int)round( $temperatureChillC * 9/5 + 32 ); 
+				
+				$temperatureChillC = (int)round( $temperatureChillC ); 
+			}
 			$temperatureColor = modGoWeatherHelper::getTempColor( $temperatureC, $my->dynamicColors );
 			
 			$windDeg = (float)$item->windDirection[deg];
