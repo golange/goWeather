@@ -555,6 +555,15 @@ class modGoWeatherHelper {
 		}
 	}
 	
+	private function demo_location( $module ) {
+		JError::raiseNotice( '', 'Demo mode for "' . $module->title . '". Set at least one location for goWeather.');
+		$currentTarget = new modGoWeatherTarget;
+		$currentTarget->name = 'Stockholm, Sweden';
+		$currentTarget->location = 'Sverige/Stockholm/Stockholm';
+		$currentTarget->id = 1;
+		return $currentTarget;
+	}
+
 	public function init( $params, 
 						  $module ) {
 		$my = new modGoWeatherHelper();
@@ -602,8 +611,7 @@ class modGoWeatherHelper {
 				}
 			}
 			if ( !$my->currentTarget ) {
-				JError::raiseWarning( '', 'No weather location has been set for ' .  $module->title );
-				return false;
+				$my->currentTarget = modGoWeatherHelper::demo_location( & $module);
 			}
 		}
 		else {
@@ -622,8 +630,7 @@ class modGoWeatherHelper {
 			}
 			
 			if( empty( $my->targets )) {
-				JError::raiseWarning( '', 'No weather location has been set for ' . $module->title );
-				return false;
+				$my->targets[] = modGoWeatherHelper::demo_location( & $module );
 			}
 			
 			$selected = JRequest::getVar( modGoWeatherHelper::QUERYID . $module->id, 1, 'get', 'int' );
