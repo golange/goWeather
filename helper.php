@@ -97,19 +97,23 @@ class modGoWeatherHelper {
 		return $data[ mt_rand(0, $i - 1) ];
 	}
 
-	private function getTempColor( $temperatureC, $dynamic ) {
-		if( !$dynamic ){
-			if ( $temperatureC < 0 ) {
-				return 'blue';
-			}
-			else {
-				return 'red';
-			}
+	private function getTempColor( $temperatureC ) {
+		if ( $temperatureC < 0 ) {
+			return 'blue';
 		}
+		else {
+			return 'red';
+		}
+	}
 
+	private function getDynamicTempColor( $temperatureC, $temperatureChillC ) {
 		// -30C #0000ff
 		//   0C #800080
 		// +30C #ff0000
+
+		if( $temperatureChillC ) {
+			$temperatureC = $temperatureChillC;
+		}
 		
 		if ( $temperatureC >= 30 ){
 			$red = 255;
@@ -299,8 +303,13 @@ class modGoWeatherHelper {
 				
 				$temperatureChillC = (int)round( $temperatureChillC ); 
 			}
-			$temperatureColor = modGoWeatherHelper::getTempColor( $temperatureC, $my->dynamicColors );
-			
+
+			if ( $my->dynamicColors ) {
+				$temperatureColor = modGoWeatherHelper::getDynamicTempColor( $temperatureC, $temperatureChillC );
+			}
+			else {
+				$temperatureColor = modGoWeatherHelper::getTempColor( $temperatureC );
+			}
 			$windDeg = (float)$item->windDirection[deg];
 
 			$windArrow = modGoWeatherHelper::windArrow( $windDeg );
