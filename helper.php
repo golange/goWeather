@@ -71,25 +71,35 @@ class modGoWeatherHelper {
 		return $files;
 	}
 
-	// Find first file that has temp above that in filename
-	public function chooseViaTemp( $my, $temp, $files ) {
-		sort( $files, SORT_NUMERIC );
-		foreach ( $files as $file ) {
-			$split = preg_split( '/(above_)|(C)/', $file );
-			if ( $split[0] ) {
-				if ( $my->debug ) {
-					JError::raiseWarning( '', 'Bad filename "' . $file .  '" for dynamic background.' );
-				}
-			}
-			else {
-				if ( $temp > $split[1] ) {
-					if ( $my->debug ) {
-						JError::raiseNotice( '', $file . ' chosen as background (temp was ' . $temp . ')');
-					}
-					return $file;
-				}
-			}
+	private function validImagesXML( $xml, $dir ){
+		foreach( $xml as $image ) {
+			if ( !file_exists( $dir . '/' . $image->file)){
+				JError::raiseWarning( '', 'Background image "' . $dir . $image->file . '" does not exist'); 
+				return false;
+			} 
 		}
+		return true;
+	}
+
+	// Find first image that match temperature
+	private function chooseViaTemp( $my, $temp, $dir ) {
+		$xml = simplexml_load_file( $dir . '/images.xml' );
+
+		if( !$xml  or !modGoWeatherHelper::validImagesXML( &$xml, $dir )) {
+			return;
+		}
+		
+		foreach( $xml as $image ) {
+			if ( $temp >= $image->above ) {
+				if ( $my->debug ) {
+					JError::raiseNotice( '', $image->file . ' chosen as background (temp was ' . $temp . ')');
+				}
+				return (string)$image->file;
+			} 
+		}
+		
+		// At least one file should always match!
+		JError::raiseWarning( '', 'No temperature match for ' . $temp . ' ' . $dir );
 	}
 
 	private function selectRandom( $data ) {
@@ -497,77 +507,77 @@ class modGoWeatherHelper {
 	public function getBackgroundImage( $params, $my, $weather ) {
 		$type = $params->get( 'background_image_type', 'single' );
 		
-		$juri = &JURI::getInstance();
-		$defaultImgDir = $juri->base() . 'modules/mod_goweather/images/';
-		
 		if ( $type == 'none' ) {
 			return;
 		}
-		else {
-			$backgroundImage = $params->get( 'background_image_path', NULL );
-		
-			switch ( $type ) {
-			case 'random':
-			case 'dynamic':
-				if ( !$backgroundImage ) {
-					$backgroundImage = '/modules/mod_goweather/images/backgrounds';
-				} 
-				else {
-					if ( !is_dir(JPATH_SITE . '/' . $backgroundImage)) {
-						if ( $my->debug ) {
-							JError::raiseWarning( '', JPATH_SITE . $backgroundImage . ' is not a directory'  );
-							
-						}
-						return;
-					}
-				}
-				$images = modGoWeatherHelper::getFiles( JPATH_SITE . '/' . $backgroundImage );
 
-				if ( !$images ) {
+		$juri = &JURI::getInstance();
+		$defaultImgDir = $juri->base() . 'modules/mod_goweather/images/';
+		
+		$backgroundImage = $params->get( 'background_image_path', NULL );
+		
+		switch ( $type ) {
+		case 'random':
+		case 'dynamic':
+			if ( !$backgroundImage ) {
+				$backgroundImage = '/modules/mod_goweather/images/backgrounds';
+			} 
+			else {
+				if ( !is_dir(JPATH_SITE . '/' . $backgroundImage)) {
 					if ( $my->debug ) {
-						JError::raiseWarning( '', $backgroundImage . ' is empty'  );
+						JError::raiseWarning( '', JPATH_SITE . $backgroundImage . ' is not a directory'  );
+						
 					}
 					return;
 				}
-
-				if ( $type == 'random' ) {
-					return $juri->base() . $backgroundImage . '/'  
-						. modGoWeatherHelper::selectRandom( $images );
-				}
-				else {
-					$file = modGoWeatherHelper::chooseViaTemp( $my, $weather['header']['imgTemp'], $images );
-
-					if ( $file ) {
-						return $juri->base() . $backgroundImage . '/'  
-							. $file;
-					}
-					else {
-						if ( $my->debug ) {
-							JError::raiseWarning( '', 'No file suitable for dynamic background found in ' 
-												  . JPATH_SITE . '/' . $backgroundImage );
-						}
-						return;
-					}
-				}
-				break;
-
-			default:
-				if ( !$backgroundImage ) {
-					$backgroundImage = $defaultImgDir . 'clear_sky.jpg';
-				}
-				else {
-					if ( !is_file(JPATH_SITE . $backgroundImage )) {
-						if ( $my->debug ) {
-							JError::raiseWarning( '', JPATH_SITE . $backgroundImage . ' is not a file'  );
-							
-						}
-					}
-				}
-				return $backgroundImage;
 			}
+			
+			if ( $type == 'dynamic' ) {
+				$file = modGoWeatherHelper::chooseViaTemp( $my, 
+														   $weather['header']['imgTemp'], 
+														   JPATH_SITE . '/' . $backgroundImage );
+				if ( $file ) {
+					return $juri->base() . $backgroundImage . '/'  
+						. $file;
+				}
+				else {
+					if ( $my->debug ) {
+						JError::raiseWarning( '', 'No file suitable for dynamic background found in ' 
+											  . JPATH_SITE . '/' . $backgroundImage );
+					}
+					return;
+				}
+			}
+			
+			// Random
+			
+			$images = modGoWeatherHelper::getFiles( JPATH_SITE . '/' . $backgroundImage );
+			
+			if ( !$images ) {
+				if ( $my->debug ) {
+					JError::raiseWarning( '', $backgroundImage . ' is empty'  );
+				}
+				return;
+			}
+			return $juri->base() . $backgroundImage . '/'  
+				. modGoWeatherHelper::selectRandom( $images );
+			
+		default:
+			if ( !$backgroundImage ) {
+				$backgroundImage = $defaultImgDir . 'clear_sky.jpg';
+			}
+			else {
+				if ( !is_file(JPATH_SITE . $backgroundImage )) {
+					if ( $my->debug ) {
+						JError::raiseWarning( '', JPATH_SITE . $backgroundImage . ' is not a file'  );
+						
+					}
+				}
+			}
+			return $backgroundImage;
 		}
 	}
-	
+
 	private function demo_location( $module ) {
 		JError::raiseNotice( '', 'Demo mode for "' . $module->title . '". Set at least one location for goWeather.');
 		$currentTarget = new modGoWeatherTarget;

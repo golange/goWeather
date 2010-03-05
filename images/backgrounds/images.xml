@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 'above' is temperature in Celsius -->
+
+<images>
+  <image>
+    <above>15</above>
+    <file>grass.jpg</file>
+  </image>
+
+  <image>
+    <above>-5</above>
+    <file>frost.jpg</file>
+  </image>
+
+<!-- Will always match -->
+  <image>
+    <above>-200</above>
+    <file>snow.jpg</file>
+  </image>
+</images>
