@@ -3,7 +3,12 @@
 
 <images>
   <image>
-    <above>15</above>
+    <above>25</above>
+    <file>sand.jpg</file>
+  </image>
+
+  <image>
+    <above>10</above>
     <file>grass.jpg</file>
   </image>
 
@@ -14,7 +19,7 @@
 
 <!-- Will always match -->
   <image>
-    <above>-200</above>
+    <above>-300</above>
     <file>snow.jpg</file>
   </image>
 </images>
