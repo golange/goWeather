@@ -130,23 +130,27 @@ class modGoWeatherHelper {
 		return 'rgb(' . $red . ',0,' . $blue . ')';
 	}
 
-	// Find max temp in two first days
-	private function maxTemp( $dates ) {
-
+	// Find average chill temp in two first days
+	private function imgTemp( $dates ) {
 		if ( !$dates ) {
 			return NULL;
 		}
 
-		$max = -100;
+		$count = 0;
+        $sum = 0;
 
 		for ( $i=0; $i < 2; $i++ ) {
 			foreach ( $dates[ $i ]->periods as $period ) {
-				if ( $period[ 'temperatureC' ] > $max ) {
-					$max = $period[ 'temperatureC' ];
+				if( $period[ 'temperatureChillC' ] ) {
+					$sum += $period[ 'temperatureChillC' ]; 
 				}
+				else {
+					$sum += $period[ 'temperatureC' ]; 
+				}
+				$count ++;
 			}
 		}
-		return $max;
+		return (int) ($sum / $count );
 	}
 
 
@@ -473,7 +477,7 @@ class modGoWeatherHelper {
 		$out = array();
 
 		$out[ 'header' ] = array( 'fetchedAt' => date( DATE_ISO8601 ),
-								  'maxTemp' => modGoWeatherHelper::maxTemp( &$dates )
+								  'imgTemp' => modGoWeatherHelper::imgTemp( &$dates )
 								  );
 		
 		$out[ 'dates' ] = $dates;
@@ -531,7 +535,7 @@ class modGoWeatherHelper {
 						. modGoWeatherHelper::selectRandom( $images );
 				}
 				else {
-					$file = modGoWeatherHelper::chooseViaTemp( $my, $weather['header']['maxTemp'], $images );
+					$file = modGoWeatherHelper::chooseViaTemp( $my, $weather['header']['imgTemp'], $images );
 
 					if ( $file ) {
 						return $juri->base() . $backgroundImage . '/'  
