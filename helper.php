@@ -219,8 +219,13 @@ class modGoWeatherHelper {
 		// Windchill Temperature is only defined for temperatures at or below 10C (50F) 
 		// and wind speeds above 4.8 kilometres per hour (3.0 mph)
 
-		if ( $temperatureC > 10 or $windSpeedKph <= 4.8 ) {
+		if ( $temperatureC > 10 ) {
 			return;
+		}
+
+		if ( $windSpeedKph <= 4.8 ) {
+			// Always show tooltip if cold enough
+			return $temperatureC;
 		}
 
 		$chill = 13.12 
